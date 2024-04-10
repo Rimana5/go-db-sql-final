@@ -13,9 +13,8 @@ func NewParcelStore(db *sql.DB) ParcelStore {
 }
 
 func (s ParcelStore) Add(p Parcel) (int, error) {
-	res, err := s.db.Exec("INSERT INTO parcel (Number, Client, Status, Address, CreatedAt) "+
-		"VALUES (:Number, :Client, :Status, :Address, :CreatedAt)",
-		sql.Named("Number", p.Number),
+	res, err := s.db.Exec("INSERT INTO parcel (Client, Status, Address, CreatedAt) "+
+		"VALUES (:Client, :Status, :Address, :CreatedAt)",
 		sql.Named("Client", p.Client),
 		sql.Named("Status", p.Status),
 		sql.Named("Address", p.Address),
@@ -82,9 +81,10 @@ func (s ParcelStore) SetStatus(number int, status string) error {
 }
 
 func (s ParcelStore) SetAddress(number int, address string) error {
-	_, err := s.db.Exec("UPDATE parcel SET address = :Address WHERE number = :Number",
+	_, err := s.db.Exec("UPDATE parcel SET address = :Address WHERE number = :Number and status = :registred",
 		sql.Named("Address", address),
-		sql.Named("Number", number))
+		sql.Named("Number", number),
+		ParcelStatusRegistered)
 	if err != nil {
 		return err
 	}

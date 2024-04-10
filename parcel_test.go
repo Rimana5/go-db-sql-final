@@ -2,10 +2,11 @@ package main
 
 import (
 	"database/sql"
-	"github.com/stretchr/testify/assert"
 	"math/rand"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 
 	"github.com/stretchr/testify/require"
 )
@@ -46,10 +47,8 @@ func TestAddGetDelete(t *testing.T) {
 	// get
 	res, err := store.Get(id)
 	require.NoError(t, err)
-	assert.Equal(t, res.Client, parcel.Client)
-	assert.Equal(t, res.Status, parcel.Status)
-	assert.Equal(t, res.Address, parcel.Address)
-	assert.Equal(t, res.CreatedAt, parcel.CreatedAt)
+	parcel.Number = id
+	assert.Equal(t, parcel, res)
 
 	// delete
 	err = store.Delete(id)
